@@ -3,6 +3,18 @@ const { getDefaultConfig } = require('expo/metro-config');
 const { withNativewind } = require('nativewind/metro');
 
 /** @type {import('expo/metro-config').MetroConfig} */
-const config = getDefaultConfig(__dirname);
+const config = withNativewind(getDefaultConfig(__dirname));
 
-module.exports = withNativewind(config);
+const parentResolveRequest = config.resolver.resolveRequest;
+
+config.resolver.resolveRequest = (context, moduleName, platform) => {
+  const resolveRequest = parentResolveRequest ?? context.resolveRequest;
+
+  if (moduleName === 'react-native-paper') {
+    return resolveRequest(context, 'react-native-paper/lib/commonjs/index.js', platform);
+  }
+
+  return resolveRequest(context, moduleName, platform);
+};
+
+module.exports = config;
