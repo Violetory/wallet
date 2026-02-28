@@ -2,7 +2,6 @@ import { Slot } from 'expo-router';
 import { MD3LightTheme, PaperProvider } from 'react-native-paper';
 import { ClerkProvider } from '@clerk/clerk-expo';
 import { tokenCache } from '@clerk/clerk-expo/token-cache';
-import SafeScreen from 'components/SafeScreen';
 import '../global.css';
 
 const theme = {
@@ -25,9 +24,7 @@ export default function RootLayout() {
   return (
     <PaperProvider theme={theme}>
       <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-        <SafeScreen>
           <Slot />
-        </SafeScreen>
       </ClerkProvider>
     </PaperProvider>
   );
