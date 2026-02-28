@@ -1,12 +1,22 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, type Edge } from 'react-native-safe-area-context';
 
-const SafeScreen = ({ children }: { children: React.ReactNode }) => {
+type SafeScreenMode = 'full' | 'x-axis' | 'bottom';
+
+type SafeScreenProps = {
+  children: React.ReactNode;
+  mode?: SafeScreenMode;
+};
+
+const edgesByMode: Record<SafeScreenMode, Edge[]> = {
+  full: ['top', 'bottom', 'left', 'right'],
+  'x-axis': ['left', 'right'],
+  bottom: ['bottom', 'left', 'right'],
+};
+
+const SafeScreen = ({ children, mode = 'full' }: SafeScreenProps) => {
   return (
-    <SafeAreaView
-        edges={['top', 'bottom', 'left', 'right']}
-        style={{ flex: 1, paddingHorizontal: 16 }}
-    >
+    <SafeAreaView edges={edgesByMode[mode]} style={{ flex: 1, paddingHorizontal: 16 }}>
       {children}
     </SafeAreaView>
   );

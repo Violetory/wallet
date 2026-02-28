@@ -117,52 +117,54 @@ export default function Page() {
         </View>
 
         {/* 注册表单 */}
-        <View className="flex-1 gap-5 bg-white p-6">
-          <Text className="mb-2 text-2xl font-bold">Create Account</Text>
+        <SafeScreen>
+          <View className="flex-1 gap-5 bg-white -mt-10">
+            <Text className="mb-2 text-2xl font-bold">Create Account</Text>
 
-          {/* 账号 */}
-          <TextInput
-            mode="outlined"
-            label="Email"
-            autoCapitalize="none"
-            value={emailAddress}
-            onChangeText={(nextEmailAddress) => setEmailAddress(nextEmailAddress)}
-            keyboardType="email-address"
-          />
+            {/* 账号 */}
+            <TextInput
+              mode="outlined"
+              label="Email"
+              autoCapitalize="none"
+              value={emailAddress}
+              onChangeText={(nextEmailAddress) => setEmailAddress(nextEmailAddress)}
+              keyboardType="email-address"
+            />
 
-          {/* 密码 */}
-          <TextInput
-            mode="outlined"
-            label="Password"
-            value={password}
-            secureTextEntry={true}
-            onChangeText={(nextPassword) => setPassword(nextPassword)}
-          />
+            {/* 密码 */}
+            <TextInput
+              mode="outlined"
+              label="Password"
+              value={password}
+              secureTextEntry={true}
+              onChangeText={(nextPassword) => setPassword(nextPassword)}
+            />
 
-          {/* 创建按钮 */}
-          <View className="relative mt-2">
-            <Button
-              mode="contained"
-              onPress={onSignUpPress}
-              disabled={!emailAddress || !password || SignUpLoading}
-              style={{ borderRadius: 4 }}
-              contentStyle={{ height: 48 }}
-              labelStyle={SignUpLoading ? { opacity: 0 } : undefined}>
-              Create
-            </Button>
-            {SignUpLoading ? (
-              <View pointerEvents="none" className="absolute inset-0 items-center justify-center">
-                <ActivityIndicator size={20} color="#FFFFFF" />
-              </View>
-            ) : null}
+            {/* 创建按钮 */}
+            <View className="relative mt-2">
+              <Button
+                mode="contained"
+                onPress={onSignUpPress}
+                disabled={!emailAddress || !password || SignUpLoading}
+                style={{ borderRadius: 4 }}
+                contentStyle={{ height: 48 }}
+                labelStyle={SignUpLoading ? { opacity: 0 } : undefined}>
+                Create
+              </Button>
+              {SignUpLoading ? (
+                <View pointerEvents="none" className="absolute inset-0 items-center justify-center">
+                  <ActivityIndicator size={20} color="#FFFFFF" />
+                </View>
+              ) : null}
+            </View>
+            <View className="flex flex-row items-center justify-center">
+              <Text className="text-gray-400"> Already have an account? </Text>
+              <Button mode="text" onPress={() => router.push('/sign-in')} compact>
+                Sign in
+              </Button>
+            </View>
           </View>
-          <View className="flex flex-row items-center justify-center">
-            <Text className="text-gray-400"> Already have an account? </Text>
-            <Button mode="text" onPress={() => router.push('/sign-in')} compact>
-              Sign in
-            </Button>
-          </View>
-        </View>
+        </SafeScreen>
       </ScrollView>
     </KeyboardAvoidingView>
   );
