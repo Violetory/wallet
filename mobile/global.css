@@ -3,5 +3,75 @@
 
 @import 'nativewind/theme';
 
+@theme {
+  /* Neutral */
+  --color-neutral-black: #191919;
+  --color-neutral-coral: #535d66;
+  --color-neutral-slate: #78838d;
+  --color-neutral-sliver: #bac2c7;
+  --color-neutral-azureish: #e1e3ed;
+
+  /* Primary (purple brand) */
+  --color-primary-indigo: #270685;
+  --color-primary-ocean: #5732bf;
+  --color-primary-majorelle: #6f45e9;
+  --color-primary-lavender: #e6ddff;
+  --color-primary-mangolia: #f7f4ff;
+
+  /* Secondary (blue brand) */
+  --color-secondary-catalina: #0d3674;
+  --color-secondary-celtic: #1d62ca;
+  --color-secondary-France: #3b85f3;
+  --color-secondary-cloud: #e4efff;
+  --color-secondary-ghost: #f5f9ff;
+
+  /* Success */
+  --color-success-salle: #117031;
+  --color-success-sea: #289b4f;
+  --color-success-shamrock: #4da66b;
+  --color-success-bright: #e6f6ec;
+  --color-success-mint: #f4fff8;
+
+  /* Warning */
+  --color-warning-bronze: #875202;
+  --color-warning-golden: #dda921;
+  --color-warning-mango: #fdc228;
+  --color-warning-blond: #ffecba;
+  --color-warning-floral: #fffaec;
+
+  /* Danger */
+  --color-danger-maroon: #6f1212;
+  --color-danger-golden-gate-bridge: #b83232;
+  --color-danger-jelly-bean: #e05555;
+  --color-danger-pale: #ffd6d6;
+  --color-danger-snow: #fff6f6;
+
+  /* Info */
+  --color-info-sliver: #bac2c7;
+  --color-info-azureish: #e1e3ed;
+  --color-info-alice: #edeff6;
+  --color-info-cultured: #f7f8fe;
+  --color-info-white: #ffffff;
+
+  /* Optional aliases */
+  --color-primary: var(--color-primary-ocean);
+  --color-secondary: var(--color-secondary-celtic);
+  --color-success: var(--color-success-sea);
+  --color-warning: var(--color-warning-golden);
+  --color-danger: var(--color-danger-golden-gate-bridge);
+  --color-info: var(--color-neutral-slate);
+  --color-text: var(--color-neutral-black);
+  --color-muted: var(--color-neutral-sliver);
+  --color-border: var(--color-neutral-azureish);
+  /* Background color for optional aliases */
+  --color-bg: var(--color-primary-lavender);
+  --color-primary-bg: var(--color-primary-majorelle);
+  --color-secondary-bg: var(--color-secondary-cloud);
+  --color-success-bg: var(--color-success-bright);
+  --color-warning-bg: var(--color-warning-blond);
+  --color-danger-bg: var(--color-danger-pale);
+  --color-info-bg: var(--color-info-cultured);
+}
+
 @source './app/**/*.{js,jsx,ts,tsx}';
 @source './components/**/*.{js,jsx,ts,tsx}';

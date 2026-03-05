@@ -1,43 +1,37 @@
-import { View, Text } from 'react-native'
-import { SignOutButton } from 'components/SignOutButton'
-import { SignedIn, SignedOut, useSession, useUser } from '@clerk/clerk-expo'
-import { Link } from 'expo-router'
-import { StyleSheet } from 'react-native'
+import { View, Text } from 'react-native';
+import { SignOutButton } from 'components/SignOutButton';
+import { SignedIn, SignedOut, useSession, useUser } from '@clerk/clerk-expo';
+import { Link } from 'expo-router';
+import SafeScreen from 'components/SafeScreen';
 
 export default function Page() {
-  const { user } = useUser()
+  const { user } = useUser();
 
-  // If your user isn't appearing as signed in,
-  // it's possible they have session tasks to complete.
-  // Learn more: https://clerk.com/docs/guides/configure/session-tasks
-  const { session } = useSession()
-  console.log(session?.currentTask)
+  // 你可以在这里访问 session 和 user 对象，来根据需要展示不同的 UI 或进行其他逻辑处理
+  const { session } = useSession();
+  console.log(session?.currentTask);
 
   return (
-    <View style={styles.container}>
-      <Text className='text-2xl font-bold'>Welcome!</Text>
-      {/* Show the sign-in and sign-up buttons when the user is signed out */}
-      <SignedOut>
-        <Link href="/(auth)/sign-in">
-          <Text>Sign in</Text>
-        </Link>
-        <Link href="/(auth)/sign-up">
-          <Text>Sign up</Text>
-        </Link>
-      </SignedOut>
-      {/* Show the sign-out button when the user is signed in */}
-      <SignedIn>
-        <Text>Hello {user?.emailAddresses[0].emailAddress}</Text>
-        <SignOutButton />
-      </SignedIn>
-    </View>
-  )
-}
+    <SafeScreen>
+      <View className="flex-1 items-center gap-4">
+        <Text className="text-2xl font-bold">Welcome!</Text>
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    gap: 16,
-  },
-})
+        {/* 未登录状态 */}
+        <SignedOut>
+          <Link href="/(auth)/sign-in">
+            <Text>Sign in</Text>
+          </Link>
+          <Link href="/(auth)/sign-up">
+            <Text>Sign up</Text>
+          </Link>
+        </SignedOut>
+        
+        {/* 已登录状态 */}
+        <SignedIn>
+          <Text>Hello {user?.emailAddresses[0].emailAddress}</Text>
+          <SignOutButton />
+        </SignedIn>
+      </View>
+    </SafeScreen>
+  );
+}

@@ -7,6 +7,7 @@ import { SvgUri } from 'react-native-svg';
 import { TextInput, Button, ActivityIndicator } from 'react-native-paper';
 import SafeScreen from 'components/SafeScreen';
 import EmailVerification from './EmailVerification';
+import Alert, { type AlertType } from 'components/Alert';
 
 const coverPhoneUri = Asset.fromModule(require('assets/cover/cover-security.svg')).uri;
 
@@ -19,15 +20,64 @@ export default function Page() {
   const [pendingVerification, setPendingVerification] = React.useState(false);
   const [code, setCode] = React.useState('');
   const [SignUpLoading, setSignUpLoading] = React.useState(false);
+  const [alertVisible, setAlertVisible] = React.useState(false);
+  const [alertMessage, setAlertMessage] = React.useState('');
+  const [alertType, setAlertType] = React.useState<AlertType>('danger');
+
+  const extractClerkErrorMessage = React.useCallback((err: unknown) => {
+    if (err && typeof err === 'object') {
+      const firstError = (
+        err as {
+          errors?: Array<{ message?: string; longMessage?: string }>;
+          message?: string;
+        }
+      ).errors?.[0];
+
+      if (firstError?.longMessage) return firstError.longMessage;
+      if (firstError?.message) return firstError.message;
+
+      if (typeof (err as { message?: string }).message === 'string') {
+        return (err as { message: string }).message;
+      }
+    }
+
+    return 'Request failed, please try again.';
+  }, []);
+
+  const showAlert = React.useCallback((message: string, type: AlertType) => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setAlertVisible(true);
+  }, []);
+
+  const isValidEmailFormat = React.useCallback((value: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }, []);
 
   // 处理注册表单提交
-  const onSignUpPress = async () => {
-    if (!isLoaded || SignUpLoading) return;
+  const onSignUpPress = React.useCallback(async () => {
+    if (SignUpLoading) return;
+
+    const trimmedEmail = emailAddress.trim();
+    if (!trimmedEmail || !password) {
+      showAlert('Account or password cannot be empty.', 'warning');
+      return;
+    }
+    if (!isValidEmailFormat(trimmedEmail)) {
+      showAlert('Please enter a valid email address.', 'warning');
+      return;
+    }
+    if (!isLoaded) {
+      showAlert('Authentication is still loading. Please try again.', 'warning');
+      return;
+    }
+
     setSignUpLoading(true);
+
     // 使用输入的邮箱和密码发起注册流程
     try {
       await signUp.create({
-        emailAddress,
+        emailAddress: trimmedEmail,
         password,
       });
 
@@ -36,22 +86,43 @@ export default function Page() {
 
       // 将 pendingVerification 设为 true，展示第二步表单并输入验证码
       setPendingVerification(true);
-    } catch (err) {
+    } catch (error) {
       // 错误处理参考：https://clerk.com/docs/guides/development/custom-flows/error-handling
-      console.error(JSON.stringify(err, null, 2));
+      showAlert(extractClerkErrorMessage(error), 'danger');
     } finally {
       setSignUpLoading(false);
     }
-  };
+  }, [
+    SignUpLoading,
+    emailAddress,
+    extractClerkErrorMessage,
+    isLoaded,
+    isValidEmailFormat,
+    password,
+    showAlert,
+    signUp,
+  ]);
 
   // 处理验证码表单提交
-  const onVerifyPress = async () => {
-    if (!isLoaded) return;
+  const onVerifyPress = React.useCallback(async () => {
+    const trimmedCode = code.trim();
+    if (!trimmedCode) {
+      showAlert('Please enter verification code.', 'warning');
+      return;
+    }
+    if (trimmedCode.length < 6) {
+      showAlert('Please enter the complete 6-digit code.', 'warning');
+      return;
+    }
+    if (!isLoaded) {
+      showAlert('Authentication is still loading. Please try again.', 'warning');
+      return;
+    }
 
     try {
       // 使用用户输入的验证码进行验证
       const signUpAttempt = await signUp.attemptEmailAddressVerification({
-        code,
+        code: trimmedCode,
       });
 
       // 如果验证完成，则激活会话并跳转
@@ -60,9 +131,7 @@ export default function Page() {
           session: signUpAttempt.createdSessionId,
           navigate: async ({ session }) => {
             if (session?.currentTask) {
-              // 检查是否存在待处理任务，并跳转到自定义 UI 引导用户完成
-              // 参考：https://clerk.com/docs/guides/development/custom-flows/authentication/session-tasks
-              console.log(session?.currentTask);
+              showAlert('Additional verification is required to finish sign up.', 'warning');
               return;
             }
 
@@ -70,23 +139,30 @@ export default function Page() {
           },
         });
       } else {
-        // 若状态不是 complete，说明用户可能还需要完成后续步骤
-        console.error(JSON.stringify(signUpAttempt, null, 2));
+        showAlert('Verification failed. Please try again.', 'danger');
       }
-    } catch (err) {
+    } catch (error) {
       // 错误处理参考：https://clerk.com/docs/guides/development/custom-flows/error-handling
-      console.error(JSON.stringify(err, null, 2));
+      showAlert(extractClerkErrorMessage(error), 'danger');
     }
-  };
+  }, [code, extractClerkErrorMessage, isLoaded, router, setActive, showAlert, signUp]);
 
   if (pendingVerification) {
     return (
-      <EmailVerification
-        code={code}
-        emailAddress={emailAddress}
-        onChangeCode={setCode}
-        onVerifyPress={onVerifyPress}
-      />
+      <>
+        <EmailVerification
+          code={code}
+          emailAddress={emailAddress}
+          onChangeCode={setCode}
+          onVerifyPress={onVerifyPress}
+        />
+        <Alert
+          visible={alertVisible}
+          onDismiss={() => setAlertVisible(false)}
+          type={alertType}
+          message={alertMessage}
+        />
+      </>
     );
   }
 
@@ -145,7 +221,7 @@ export default function Page() {
               <Button
                 mode="contained"
                 onPress={onSignUpPress}
-                disabled={!emailAddress || !password || SignUpLoading}
+                disabled={SignUpLoading}
                 style={{ borderRadius: 4 }}
                 contentStyle={{ height: 48 }}
                 labelStyle={SignUpLoading ? { opacity: 0 } : undefined}>
@@ -166,6 +242,12 @@ export default function Page() {
           </View>
         </SafeScreen>
       </ScrollView>
+      <Alert
+        visible={alertVisible}
+        onDismiss={() => setAlertVisible(false)}
+        type={alertType}
+        message={alertMessage}
+      />
     </KeyboardAvoidingView>
   );
 }
