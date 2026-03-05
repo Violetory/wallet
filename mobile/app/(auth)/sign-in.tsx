@@ -9,6 +9,7 @@ import { SvgUri } from 'react-native-svg';
 import SafeScreen from 'components/SafeScreen';
 import EmailVerification from './EmailVerification';
 import Alert, { type AlertType } from 'components/Alert';
+import AppIcon from 'components/AppIcon';
 
 const coverPhoneUri = Asset.fromModule(require('assets/cover/cover-phone.svg')).uri;
 
@@ -21,6 +22,7 @@ export default function Page() {
   const [code, setCode] = React.useState('');
   const [showEmailCode, setShowEmailCode] = React.useState(false);
   const [LoginLoading, setLoginLoading] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
   const [alertVisible, setAlertVisible] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState('');
   const [alertType, setAlertType] = React.useState<AlertType>('danger');
@@ -226,7 +228,7 @@ export default function Page() {
 
         {/* 登录表单 */}
         <SafeScreen>
-          <View className="flex-1 gap-5 bg-white -mt-10">
+          <View className="-mt-10 flex-1 gap-5 bg-white">
             <Text className="mb-2 text-2xl font-bold">Welcome Back</Text>
 
             {/* 账号 */}
@@ -244,7 +246,20 @@ export default function Page() {
               mode="outlined"
               label="Password"
               value={password}
-              secureTextEntry={true}
+              secureTextEntry={!showPassword}
+              right={
+                <TextInput.Icon
+                  icon={({ size, color }) => (
+                    <AppIcon
+                      name={showPassword ? 'eye' : 'eye-off'}
+                      size={size}
+                      color={typeof color === 'string' ? color : '#78838D'}
+                    />
+                  )}
+                  onPress={() => setShowPassword((prev) => !prev)}
+                  forceTextInputFocus={false}
+                />
+              }
               onChangeText={(nextPassword) => setPassword(nextPassword)}
             />
 

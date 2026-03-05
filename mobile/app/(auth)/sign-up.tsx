@@ -8,6 +8,7 @@ import { TextInput, Button, ActivityIndicator } from 'react-native-paper';
 import SafeScreen from 'components/SafeScreen';
 import EmailVerification from './EmailVerification';
 import Alert, { type AlertType } from 'components/Alert';
+import AppIcon from 'components/AppIcon';
 
 const coverPhoneUri = Asset.fromModule(require('assets/cover/cover-security.svg')).uri;
 
@@ -20,6 +21,7 @@ export default function Page() {
   const [pendingVerification, setPendingVerification] = React.useState(false);
   const [code, setCode] = React.useState('');
   const [SignUpLoading, setSignUpLoading] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
   const [alertVisible, setAlertVisible] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState('');
   const [alertType, setAlertType] = React.useState<AlertType>('danger');
@@ -212,7 +214,20 @@ export default function Page() {
               mode="outlined"
               label="Password"
               value={password}
-              secureTextEntry={true}
+              secureTextEntry={!showPassword}
+              right={
+                <TextInput.Icon
+                  icon={({ size, color }) => (
+                    <AppIcon
+                      name={showPassword ? 'eye' : 'eye-off'}
+                      size={size}
+                      color={typeof color === 'string' ? color : '#78838D'}
+                    />
+                  )}
+                  onPress={() => setShowPassword((prev) => !prev)}
+                  forceTextInputFocus={false}
+                />
+              }
               onChangeText={(nextPassword) => setPassword(nextPassword)}
             />
 
