@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 import { Button, Portal, Snackbar } from 'react-native-paper';
+import AppIcon, { type AppIconName } from 'components/AppIcon';
 
 export type AlertType = 'success' | 'warning' | 'danger' | 'info' | 'default';
 
@@ -8,7 +9,7 @@ type AlertProps = {
   visible?: boolean;
   message: string;
   onDismiss?: () => void;
-  icon?: React.ReactNode;
+  icon?: AppIconName;
   type?: AlertType;
   actionDisabled?: boolean;
   duration?: number;
@@ -85,8 +86,8 @@ const Alert = ({
         }}>
         <View
           className={`w-full flex-row items-center justify-between rounded-md py-2 pr-2 pl-4 ${palette.backgroundClassName}`}>
-          <View className="mr-3 flex-1 flex-row items-center">
-            {icon ? <View className="mr-2">{icon}</View> : null}
+          <View className="mr-3 flex-1 flex-row items-center gap-2">
+            {icon ? <AppIcon name={icon} size={18} /> : null}
             <Text className={`shrink leading-5 font-medium ${palette.textClassName}`}>
               {message}
             </Text>
