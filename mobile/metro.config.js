@@ -10,6 +10,10 @@ const parentResolveRequest = config.resolver.resolveRequest;
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   const resolveRequest = parentResolveRequest ?? context.resolveRequest;
 
+  if (moduleName === '@clerk/clerk-react') {
+    return resolveRequest(context, '@clerk/clerk-react/dist/index.js', platform);
+  }
+
   if (moduleName === 'react-native-paper') {
     return resolveRequest(context, 'react-native-paper/lib/commonjs/index.js', platform);
   }

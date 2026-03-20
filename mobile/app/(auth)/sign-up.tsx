@@ -1,4 +1,4 @@
-import { useSignUp } from '@clerk/clerk-expo';
+import { useSignUp } from '@clerk/clerk-react';
 import { Asset } from 'expo-asset';
 import { useRouter } from 'expo-router';
 import * as React from 'react';

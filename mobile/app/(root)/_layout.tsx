@@ -1,4 +1,4 @@
-import { useUser } from '@clerk/clerk-expo';
+import { useUser } from '@clerk/clerk-react';
 import { Redirect } from 'expo-router';
 import { Stack } from 'expo-router/stack';
 

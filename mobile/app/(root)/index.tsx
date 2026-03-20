@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native';
 import { SignOutButton } from 'components/SignOutButton';
-import { SignedIn, SignedOut, useSession, useUser } from '@clerk/clerk-expo';
+import { SignedIn, SignedOut, useSession, useUser } from '@clerk/clerk-react';
 import { Link } from 'expo-router';
 import SafeScreen from 'components/SafeScreen';
 

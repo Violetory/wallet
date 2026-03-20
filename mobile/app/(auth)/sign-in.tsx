@@ -1,4 +1,4 @@
-import { useSignIn } from '@clerk/clerk-expo';
+import { useSignIn } from '@clerk/clerk-react';
 import type { EmailCodeFactor } from '@clerk/types';
 import { Asset } from 'expo-asset';
 import { useRouter } from 'expo-router';

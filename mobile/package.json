@@ -12,8 +12,10 @@
   },
   "dependencies": {
     "@clerk/clerk-expo": "^2.19.22",
+    "@clerk/clerk-react": "5.61.3",
     "@tailwindcss/postcss": "^4.1.13",
     "expo": "^54.0.0",
+    "expo-crypto": "~15.0.8",
     "expo-linking": "~8.0.11",
     "expo-router": "~6.0.22",
     "expo-secure-store": "^15.0.8",
